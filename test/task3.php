@@ -1,24 +1,24 @@
 <?php
-function checkDishes(array $dishes, int $min = 0, int $max = 100) 
+function checkDishes(array $dishes) 
 {
-    $result = !empty($dishes);
+    if (empty($dishes)) return false;
     foreach ($dishes as $dish) {
-        if ($dish < $min || $dish > $max || !is_numeric($dish)) $result = false;
+        if (preg_match('/^[\d]+$/', $dish) !== 1) return false;
+        elseif ($dish < 0 || $dish > 100) return false;
     }
-    return $result;
+    return true;
 }
 
-$flag = true;
 while (true) {
     $line = trim(fgets(STDIN));
-    if (empty($line)) {
+    if (strlen($line) === 0) {
         print_r("Пустая строка. Попробуйте еще раз:\n");
     } else {
-        $dishes = preg_split("/[\s,.]+/", $line);
+        $dishes = preg_split("/[\s]+/", $line);
         if (checkDishes($dishes)) {
         	$dishes = array_count_values($dishes);
-        	echo max($dishes);
-            $flag = false;
+        	echo max($dishes)."\n";
+            return;
         } else {
         	print_r("Строка должна содержать номера блюд от 1 до 100. Попробуйте еще раз:\n");
         }
